@@ -18,6 +18,10 @@ UCLASS()
 class GAS_EXAMPLE_API AGAS_PlayerCharacter : public AGAS_BaseCharacter
 {
 	GENERATED_BODY()
+
+    /** Pawn mesh: 1st person view (arms; seen only by self) */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+    USkeletalMeshComponent* Mesh1P;
 	
     /** Follow camera */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -45,6 +49,8 @@ class GAS_EXAMPLE_API AGAS_PlayerCharacter : public AGAS_BaseCharacter
 public:
     // Sets default values for this character's properties
     AGAS_PlayerCharacter();
+
+    USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 
 protected:
     // Called when the game starts or when spawned

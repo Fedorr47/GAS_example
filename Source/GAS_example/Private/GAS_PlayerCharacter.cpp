@@ -39,6 +39,14 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+
+    Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+    Mesh1P->SetOnlyOwnerSee(true);
+    Mesh1P->SetupAttachment(FirstPersonCameraComponent);
+    Mesh1P->bCastDynamicShadow = false;
+    Mesh1P->CastShadow = false;
+    //Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
+    Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 }
 
 void AGAS_PlayerCharacter::BeginPlay()
