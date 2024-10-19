@@ -11,7 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "AbilitySystemComponent.h"
-#include "GAS_HealthAttributeSet.h"
+#include "GAS_CharacterAttributeSet.h"
 #include "../GAS_example.h"
 
 AGAS_PlayerCharacter::AGAS_PlayerCharacter()
@@ -45,7 +45,6 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
     Mesh1P->SetupAttachment(FirstPersonCameraComponent);
     Mesh1P->bCastDynamicShadow = false;
     Mesh1P->CastShadow = false;
-    //Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
     Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 }
 

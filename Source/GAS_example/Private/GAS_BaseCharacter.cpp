@@ -4,7 +4,7 @@
 #include "GAS_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "GAS_Ability.h"
-#include "GAS_HealthAttributeSet.h"
+#include "GAS_CharacterAttributeSet.h"
 
 // Sets default values
 AGAS_BaseCharacter::AGAS_BaseCharacter()
@@ -13,7 +13,7 @@ AGAS_BaseCharacter::AGAS_BaseCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
 
-	HealthSet = CreateDefaultSubobject<UGAS_HealthAttributeSet>("HealthSet");
+	CharacterSet = CreateDefaultSubobject<UGAS_CharacterAttributeSet>("HealthSet");
 
 }
 
@@ -22,10 +22,10 @@ void AGAS_BaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	HealthSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
+	CharacterSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(HealthSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(HealthSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
 	
 }
 

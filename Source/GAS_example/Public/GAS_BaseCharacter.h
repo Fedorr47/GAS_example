@@ -9,7 +9,7 @@
 #include "GAS_BaseCharacter.generated.h"
 
 class UGAS_Ability;
-class UGAS_HealthAttributeSet;
+class UGAS_CharacterAttributeSet;
 class UAbilitySystemComponent;
 
 UCLASS()
@@ -26,7 +26,7 @@ protected:
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UGAS_HealthAttributeSet* HealthSet;
+	UGAS_CharacterAttributeSet* CharacterSet;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 	TArray<TSubclassOf<UGAS_Ability>> DefaultAbilities;

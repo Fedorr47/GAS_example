@@ -1,10 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "GAS_HealthAttributeSet.h"
+#include "GAS_CharacterAttributeSet.h"
 #include "GameplayEffectExtension.h"
 
-void UGAS_HealthAttributeSet::ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const
+void UGAS_CharacterAttributeSet::ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
     if (Attribute == GetHealthAttribute())
     {
@@ -16,7 +14,7 @@ void UGAS_HealthAttributeSet::ClampAttributeOnChange(const FGameplayAttribute& A
     }
 }
 
-void UGAS_HealthAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UGAS_CharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
     Super::PostGameplayEffectExecute(Data);
 
@@ -51,11 +49,11 @@ void UGAS_HealthAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMod
     }
 }
 
-void UGAS_HealthAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UGAS_CharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 }
 
-UGAS_HealthAttributeSet::UGAS_HealthAttributeSet() :
+UGAS_CharacterAttributeSet::UGAS_CharacterAttributeSet() :
 	Health(60.0f), MaxHealth(60.0f), Shield(0.0f), MaxShield(50.0f), ShieldRegen(5.0f)
 {
 }
