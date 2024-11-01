@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GAS_BaseCharacter.h"
+#include "InputDataConfig.h" 
 #include "GAS_PlayerCharacter.generated.h"
 
 class UCameraComponent;
@@ -31,21 +32,10 @@ class GAS_EXAMPLE_API AGAS_PlayerCharacter : public AGAS_BaseCharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputMappingContext* DefaultMappingContext;
 
-    /** Jump Input Action */
+    /** Config for avaiable input actions - create custom InputDataConfig object to insert here. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-    UInputAction* JumpAction;
-
-    /** Move Input Action */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-    UInputAction* MoveAction;
-
-    /** Look Input Action */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-    UInputAction* LookAction;
-
-    /** Fire Input Action */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-    UInputAction* FireAbilityAction;
+    UInputDataConfig* InputActions;
+    
 public:
     // Sets default values for this character's properties
     AGAS_PlayerCharacter();
@@ -66,6 +56,8 @@ protected:
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    void GiveAbility(TSubclassOf<UInputAction> StartupAbility);
 
     void FireAbility(const FInputActionValue& Value);
+    
 };

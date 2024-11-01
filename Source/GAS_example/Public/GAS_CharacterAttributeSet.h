@@ -8,6 +8,7 @@
 #include "GAS_CharacterAttributeSet.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_FourParams(FDamageTakenEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayTagContainer& /*GameplayTagContainer*/, float /*Damage*/);
+DECLARE_MULTICAST_DELEGATE_FourParams(FAccelerationSpeedEvent, AActor*  /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayTagContainer& /*GameplayTagContainer*/, float /*NewAccelerationSpeed*/);
 
 /**
  * 
@@ -44,7 +45,25 @@ public:
     FGameplayAttributeData InDamage;
     ATTRIBUTE_ACCESSORS(UGAS_CharacterAttributeSet, InDamage);
 
+    UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+    FGameplayAttributeData Stamina;
+    ATTRIBUTE_ACCESSORS(UGAS_CharacterAttributeSet, Stamina);
+
+    UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+    FGameplayAttributeData MaxStamina;
+    ATTRIBUTE_ACCESSORS(UGAS_CharacterAttributeSet, MaxStamina);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AccelerationSpeed;
+	ATTRIBUTE_ACCESSORS(UGAS_CharacterAttributeSet, AccelerationSpeed);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxAccelerationSpeed;
+	ATTRIBUTE_ACCESSORS(UGAS_CharacterAttributeSet, MaxAccelerationSpeed);
+
+
     mutable FDamageTakenEvent OnDamageTaken;
+	mutable FAccelerationSpeedEvent OnAccelerationSpeed;
 
 protected:
     virtual void ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const override;

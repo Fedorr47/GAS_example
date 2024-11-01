@@ -47,6 +47,23 @@ void UGAS_CharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
             }
         }
     }
+    else if (Data.EvaluatedData.Attribute == GetAccelerationSpeedAttribute())
+    {
+        float newAcceleration = GetAccelerationSpeed();
+        if (newAcceleration > 1.0f)
+        {
+            if (OnAccelerationSpeed.IsBound())
+            {
+                const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+                AActor* Instigator = EffectContext.GetOriginalInstigator();
+                AActor* Causer = EffectContext.GetEffectCauser();
+
+                OnAccelerationSpeed.Broadcast(Instigator, Causer, Data.EffectSpec.CapturedSourceTags.GetSpecTags(), Data.EvaluatedData.Magnitude);
+                SetAccelerationSpeed(FMath::Clamp(newAcceleration, 1.0f, GetMaxAccelerationSpeed()));
+            }
+        }
+    }
+    
 }
 
 void UGAS_CharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)

@@ -123,21 +123,22 @@ void AGAS_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
     // Set up action bindings
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
-        // Jumping
-        EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-        EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-        // Moving
-        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Move);
-
-        // Looking
-        EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Look);
-
-        // Firing ability
-        EnhancedInputComponent->BindAction(FireAbilityAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::FireAbility);
+        if (!InputActions) return;
+    
+        EnhancedInputComponent->BindAction(InputActions->JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+        EnhancedInputComponent->BindAction(InputActions->JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+        EnhancedInputComponent->BindAction(InputActions->MoveAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Move);
+        EnhancedInputComponent->BindAction(InputActions->LookAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Look);
+        EnhancedInputComponent->BindAction(InputActions->FireAbilityAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::FireAbility);
     }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("%s: Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy input system, please update the code accordingly."), *GetName());
     }
+}
+
+void AGAS_PlayerCharacter::GiveAbility(TSubclassOf<UInputAction> StartupAbility)
+{
+    //AbilitySystemComponent->GiveAbility(
+    //            FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
 }
