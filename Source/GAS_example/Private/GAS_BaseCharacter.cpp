@@ -5,16 +5,15 @@
 #include "AbilitySystemComponent.h"
 #include "GAS_Ability.h"
 #include "GAS_CharacterAttributeSet.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
 AGAS_BaseCharacter::AGAS_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
-
-	CharacterSet = CreateDefaultSubobject<UGAS_CharacterAttributeSet>("HealthSet");
-
+	CharacterAttributesSet = CreateDefaultSubobject<UGAS_CharacterAttributeSet>("CharacterAttributeSet");
 }
 
 // Called when the game starts or when spawned
@@ -22,10 +21,11 @@ void AGAS_BaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CharacterSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
+	CharacterAttributesSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
+    CharacterAttributesSet->OnAccelerationSpeed.AddUObject(this, &AGAS_BaseCharacter::OnAccelerationSpeedChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
 	
 }
 
@@ -71,6 +71,11 @@ void AGAS_BaseCharacter::InitializeEffects()
 void AGAS_BaseCharacter::OnDamageTakenChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float Damage)
 {
     OnDamageTaken(DamageInstigator, DamageCauser, GameplayTagContainer, Damage);
+}
+
+void AGAS_BaseCharacter::OnAccelerationSpeedChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float AcceleratePower)
+{
+     GetCharacterMovement()->MaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed * AcceleratePower;
 }
 
 void AGAS_BaseCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& Data)

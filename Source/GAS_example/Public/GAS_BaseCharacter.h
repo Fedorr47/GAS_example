@@ -26,7 +26,7 @@ protected:
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UGAS_CharacterAttributeSet* CharacterSet;
+	UGAS_CharacterAttributeSet* CharacterAttributesSet;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 	TArray<TSubclassOf<UGAS_Ability>> DefaultAbilities;
@@ -46,6 +46,8 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	virtual void OnDamageTakenChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float Damage);
+	virtual void OnAccelerationSpeedChanged(AActor* DamageInstigator, AActor* DamageCauser,
+	                                const FGameplayTagContainer& GameplayTagContainer, float AcceleratePower);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "GAS")
 	void OnDamageTaken(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float Damage);

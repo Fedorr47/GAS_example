@@ -13,5 +13,6 @@ UCLASS()
 class GAS_EXAMPLE_API AGAS_EnemyCharacter : public AGAS_BaseCharacter
 {
 	GENERATED_BODY()
-	
+	AGAS_EnemyCharacter() : Super()
+	{}
 };
