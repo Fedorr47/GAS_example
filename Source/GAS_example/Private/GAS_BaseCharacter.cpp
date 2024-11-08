@@ -75,7 +75,7 @@ void AGAS_BaseCharacter::OnDamageTakenChanged(AActor* DamageInstigator, AActor* 
 
 void AGAS_BaseCharacter::OnAccelerationSpeedChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float AcceleratePower)
 {
-     GetCharacterMovement()->MaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed * AcceleratePower;
+    OnAcceleratePerformed(DamageInstigator, DamageCauser, GameplayTagContainer, AcceleratePower);
 }
 
 void AGAS_BaseCharacter::OnHealthAttributeChanged(const FOnAttributeChangeData& Data)

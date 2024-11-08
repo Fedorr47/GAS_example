@@ -52,6 +52,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "GAS")
 	void OnDamageTaken(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float Damage);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "GAS")
+	void OnAcceleratePerformed(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayTagContainer& GameplayTagContainer, float AcceleratePower);
+
 	virtual void OnHealthAttributeChanged(const FOnAttributeChangeData& Data);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "GAS")
