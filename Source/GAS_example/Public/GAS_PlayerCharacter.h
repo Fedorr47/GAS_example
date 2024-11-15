@@ -56,8 +56,6 @@ protected:
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-    void GiveAbility(TSubclassOf<UInputAction> StartupAbility);
-
-    void FireAbility(const FInputActionValue& Value);
-    
+    void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+    void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 };

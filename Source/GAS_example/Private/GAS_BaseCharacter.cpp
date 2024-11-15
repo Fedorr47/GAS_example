@@ -3,8 +3,10 @@
 
 #include "GAS_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "ExtAbilitySystemComponent.h"
 #include "GAS_Ability.h"
 #include "GAS_CharacterAttributeSet.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 
@@ -12,7 +14,7 @@
 AGAS_BaseCharacter::AGAS_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
+	AbilitySystemComponent = CreateDefaultSubobject<UExtAbilitySystemComponent>("AbilitySystemComp");
 	CharacterAttributesSet = CreateDefaultSubobject<UGAS_CharacterAttributeSet>("CharacterAttributeSet");
 }
 
@@ -42,7 +44,7 @@ void AGAS_BaseCharacter::InitializeAbilities()
 
     for (TSubclassOf<UGAS_Ability>& Ability : DefaultAbilities)
     {
-        FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, static_cast<int32>(Ability.GetDefaultObject()->GetAbilityInputID()), this));
+        //[[maybe_unused]] FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, static_cast<int32>(Ability.GetDefaultObject()->GetAbilityInputID()), this));
     }
 }
 

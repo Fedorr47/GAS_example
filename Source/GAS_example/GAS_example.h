@@ -9,6 +9,5 @@ enum class EAbilityInputID : uint8
 {
 	None,
 	Confirm,
-	Cancel,
-	FireAbility
+	Cancel
 };

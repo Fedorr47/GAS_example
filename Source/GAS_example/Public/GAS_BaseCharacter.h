@@ -10,7 +10,7 @@
 
 class UGAS_Ability;
 class UGAS_CharacterAttributeSet;
-class UAbilitySystemComponent;
+class UExtAbilitySystemComponent;
 
 UCLASS()
 class GAS_EXAMPLE_API AGAS_BaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -22,8 +22,8 @@ public:
 	AGAS_BaseCharacter();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UAbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY(Transient)
+	UExtAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	UGAS_CharacterAttributeSet* CharacterAttributesSet;

@@ -8,9 +8,14 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
+#include "ExtCharacterMovementComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "AbilitySystemComponent.h"
+#include "ExtAbilitySystemComponent.h"
+#include "ExtEnhancedInputComponent.h"
+#include "ExtGameplayTags.h"
+#include "GAS_Ability.h"
 #include "GAS_CharacterAttributeSet.h"
 #include "../GAS_example.h"
 
@@ -51,11 +56,6 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
 void AGAS_PlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
-}
-
-void AGAS_PlayerCharacter::FireAbility(const FInputActionValue& Value)
-{
-    SendAbilityLocalInput(Value, static_cast<int32>(EAbilityInputID::FireAbility));
 }
 
 void AGAS_PlayerCharacter::Look(const FInputActionValue& Value)
@@ -101,44 +101,58 @@ void AGAS_PlayerCharacter::SendAbilityLocalInput(const FInputActionValue& Value,
 
     if (Value.Get<bool>())
     {
-        AbilitySystemComponent->AbilityLocalInputPressed(InputID);
+        //AbilitySystemComponent->AbilityLocalInputPressed(InputID);
     }
     else
     {
-        AbilitySystemComponent->AbilityLocalInputReleased(InputID);
+        //AbilitySystemComponent->AbilityLocalInputReleased(InputID);
     }
 }
 
 void AGAS_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     // Add Input Mapping Context
+    UEnhancedInputLocalPlayerSubsystem* Subsystem = nullptr;
     if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
     {
-        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+        Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+        if (IsValid(Subsystem))
         {
             Subsystem->AddMappingContext(DefaultMappingContext, 0);
         }
     }
 
     // Set up action bindings
-    if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+    if (UExtEnhancedInputComponent* ExtIMC = Cast<UExtEnhancedInputComponent>(PlayerInputComponent))
     {
         if (!InputActions) return;
-    
-        EnhancedInputComponent->BindAction(InputActions->JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-        EnhancedInputComponent->BindAction(InputActions->JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-        EnhancedInputComponent->BindAction(InputActions->MoveAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Move);
-        EnhancedInputComponent->BindAction(InputActions->LookAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::Look);
-        EnhancedInputComponent->BindAction(InputActions->FireAbilityAction, ETriggerEvent::Triggered, this, &AGAS_PlayerCharacter::FireAbility);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("%s: Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy input system, please update the code accordingly."), *GetName());
+        
+        if (ensureMsgf(ExtIMC, TEXT("Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to UExtEnhancedInputComponent or a subclass of it.")))
+        {
+            // Add the key mappings that may have been set by the player
+            ExtIMC->AddInputMappings(InputActions, Subsystem);
+            
+            TArray<uint32> BindHandles;
+            ExtIMC->BindAbilityActions(InputActions, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+
+            ExtIMC->BindNativeAction(InputActions, ExtGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
+            ExtIMC->BindNativeAction(InputActions, ExtGameplayTags::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Look, /*bLogIfNotFound=*/ false);
+        }
     }
 }
 
-void AGAS_PlayerCharacter::GiveAbility(TSubclassOf<UInputAction> StartupAbility)
+void AGAS_PlayerCharacter::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
-    //AbilitySystemComponent->GiveAbility(
-    //            FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+    if (UExtAbilitySystemComponent* ExtASC = Cast<UExtAbilitySystemComponent>(GetAbilitySystemComponent()))
+    {
+        ExtASC->AbilityInputTagPressed(InputTag);
+    }
+}
+
+void AGAS_PlayerCharacter::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+    if (UExtAbilitySystemComponent* ExtASC = Cast<UExtAbilitySystemComponent>(GetAbilitySystemComponent()))
+    {
+        ExtASC->AbilityInputTagReleased(InputTag);
+    }
 }

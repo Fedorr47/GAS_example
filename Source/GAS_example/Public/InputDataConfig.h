@@ -1,33 +1,50 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
-#include "InputAction.h"
+#include "GameplayTagContainer.h"
+
 #include "InputDataConfig.generated.h"
 
+class UInputAction;
+class UObject;
+struct FFrame;
 
-UCLASS(Blueprintable, MinimalAPI)
+USTRUCT(BlueprintType)
+struct FExtInputAction
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<const UInputAction> InputAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (Categories = "InputTag"))
+	FGameplayTag InputTag;
+};
+
+
+UCLASS(BlueprintType, Const)
 class UInputDataConfig : public UDataAsset
 {
 	GENERATED_BODY()
-	
+
 public:
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
 
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
+	UInputDataConfig(const FObjectInitializer& ObjectInitializer);
 
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+	UFUNCTION(BlueprintCallable, Category = "Ext|Pawn")
+	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
 
-	/** Fire Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* FireAbilityAction;
+	UFUNCTION(BlueprintCallable, Category = "Ext|Pawn")
+	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* SprintAbilityAction;
+public:
+	// List of input actions used by the owner.  These input actions are mapped to a gameplay tag and must be manually bound.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (TitleProperty = "InputAction"))
+	TArray<FExtInputAction> NativeInputActions;
+
+	// List of input actions used by the owner.  These input actions are mapped to a gameplay tag and are automatically bound to abilities with matching input tags.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (TitleProperty = "InputAction"))
+	TArray<FExtInputAction> AbilityInputActions;
 };
