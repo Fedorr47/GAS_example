@@ -15,8 +15,8 @@
 #include "ExtAbilitySystemComponent.h"
 #include "ExtEnhancedInputComponent.h"
 #include "ExtGameplayTags.h"
-#include "GAS_Ability.h"
-#include "GAS_CharacterAttributeSet.h"
+#include "ExtGameplayAbility.h"
+#include "ExtCharacterAttributeSet.h"
 #include "../GAS_example.h"
 
 AGAS_PlayerCharacter::AGAS_PlayerCharacter()
@@ -51,6 +51,11 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
     Mesh1P->bCastDynamicShadow = false;
     Mesh1P->CastShadow = false;
     Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+}
+
+float AGAS_PlayerCharacter::GetMoveAccelerated() const
+{
+    return IsValid(CharacterAttributesSet) ? CharacterAttributesSet->GetAccelerationSpeed() : 0.0f;
 }
 
 void AGAS_PlayerCharacter::BeginPlay()
@@ -96,16 +101,16 @@ void AGAS_PlayerCharacter::Move(const FInputActionValue& Value)
 
 void AGAS_PlayerCharacter::SendAbilityLocalInput(const FInputActionValue& Value, int32 InputID)
 {
-    if (!AbilitySystemComponent)
+    if (!ExtAbilitySystemComponent)
         return;
 
     if (Value.Get<bool>())
     {
-        //AbilitySystemComponent->AbilityLocalInputPressed(InputID);
+        //ExtAbilitySystemComponent->AbilityLocalInputPressed(InputID);
     }
     else
     {
-        //AbilitySystemComponent->AbilityLocalInputReleased(InputID);
+        //ExtAbilitySystemComponent->AbilityLocalInputReleased(InputID);
     }
 }
 

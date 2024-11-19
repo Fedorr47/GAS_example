@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
 #include "../GAS_example.h"
-#include "GAS_Ability.generated.h"
+#include "ExtGameplayAbility.generated.h"
 
 class AGAS_PlayerCharacter;
 class UExtAbilitySystemComponent;
@@ -56,14 +56,14 @@ public:
 };
 
 UCLASS(Abstract, HideCategories = Input, Meta = (ShortTooltip = "The base gameplay ability class used by this project."))
-class GAS_EXAMPLE_API UGAS_Ability : public UGameplayAbility
+class GAS_EXAMPLE_API UExtGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	friend class UExtAbilitySystemComponent;
 
 public:
 
-	UGAS_Ability(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UExtGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Ext|Ability")
 	UExtAbilitySystemComponent* GetExtAbilitySystemComponentFromActorInfo() const;

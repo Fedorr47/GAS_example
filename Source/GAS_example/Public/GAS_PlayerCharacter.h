@@ -42,6 +42,9 @@ public:
 
     USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ext|Character")
+    float GetMoveAccelerated() const;
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;

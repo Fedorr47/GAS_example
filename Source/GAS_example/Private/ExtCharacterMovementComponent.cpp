@@ -4,6 +4,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "GAS_BaseCharacter.h"
+#include "GAS_PlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
@@ -127,5 +129,9 @@ float UExtCharacterMovementComponent::GetMaxSpeed() const
 		}
 	}
 
-	return Super::GetMaxSpeed();
+	const AGAS_PlayerCharacter* character = Cast<AGAS_PlayerCharacter>(GetOwner());
+
+	const float MaxSpeed = character->GetMoveAccelerated();
+
+	return MaxSpeed;
 }

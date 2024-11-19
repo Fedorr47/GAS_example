@@ -8,9 +8,10 @@
 #include "GameplayEffectTypes.h"
 #include "GAS_BaseCharacter.generated.h"
 
-class UGAS_Ability;
-class UGAS_CharacterAttributeSet;
+class UExtGameplayAbility;
+class UExtCharacterAttributeSet;
 class UExtAbilitySystemComponent;
+class UExtAbilitySet;
 
 UCLASS()
 class GAS_EXAMPLE_API AGAS_BaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -21,27 +22,25 @@ public:
 	// Sets default values for this character's properties
 	AGAS_BaseCharacter();
 
+	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
 protected:
-	UPROPERTY(Transient)
-	UExtAbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly, Category="Ext|Abilities")
+	UExtAbilitySystemComponent* ExtAbilitySystemComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UGAS_CharacterAttributeSet* CharacterAttributesSet;
+	UPROPERTY(VisibleAnywhere, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UExtCharacterAttributeSet* CharacterAttributesSet;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
-	TArray<TSubclassOf<UGAS_Ability>> DefaultAbilities;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ext|Abilities")
+	TArray<TObjectPtr<UExtAbilitySet>> AbilitySets;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 	TArray<TSubclassOf<class UGameplayEffect>> DefaultEffects;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-	virtual void InitializeAbilities();
-	virtual void InitializeAttributes();
-	virtual void InitializeEffects();
+	
+	void InitializeAbilitySystem();
 
 	virtual void PostInitializeComponents() override;
 

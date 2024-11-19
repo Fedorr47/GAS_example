@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "GAS_CharacterAttributeSet.h"
+#include "ExtCharacterAttributeSet.h"
 #include "GameplayEffectExtension.h"
 
-void UGAS_CharacterAttributeSet::ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const
+void UExtCharacterAttributeSet::ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
     if (Attribute == GetHealthAttribute())
     {
@@ -14,7 +14,7 @@ void UGAS_CharacterAttributeSet::ClampAttributeOnChange(const FGameplayAttribute
     }
 }
 
-void UGAS_CharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UExtCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
     Super::PostGameplayEffectExecute(Data);
 
@@ -54,23 +54,18 @@ void UGAS_CharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
         {
             if (OnAccelerationSpeed.IsBound())
             {
-                const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
-                AActor* Instigator = EffectContext.GetOriginalInstigator();
-                AActor* Causer = EffectContext.GetEffectCauser();
-
-                OnAccelerationSpeed.Broadcast(Instigator, Causer, Data.EffectSpec.CapturedSourceTags.GetSpecTags(), Data.EvaluatedData.Magnitude);
-                SetAccelerationSpeed(FMath::Clamp(newAcceleration, 1.0f, GetMaxAccelerationSpeed()));
+               SetAccelerationSpeed(FMath::Clamp(GetAccelerationSpeed(), 0.0f, 1200.0f));
             }
         }
     }
     
 }
 
-void UGAS_CharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UExtCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 }
 
-UGAS_CharacterAttributeSet::UGAS_CharacterAttributeSet() :
+UExtCharacterAttributeSet::UExtCharacterAttributeSet() :
 	Health(60.0f), MaxHealth(60.0f), Shield(0.0f), MaxShield(50.0f), ShieldRegen(5.0f)
 {
 }

@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GAS_Ability.h"
+#include "ExtGameplayAbility.h"
 
 #include "ExtAbilitySystemComponent.h"
 #include "GAS_PlayerCharacter.h"
@@ -11,7 +11,7 @@
 #include "ExtGameplayEffectContext.h"
 #include "GameFramework/PlayerState.h"
 
-#include UE_INLINE_GENERATED_CPP_BY_NAME(GAS_Ability)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(ExtGameplayAbility)
 
 #define ENSURE_ABILITY_IS_INSTANTIATED_OR_RETURN(FunctionName, ReturnValue)																				\
 {																																						\
@@ -25,7 +25,7 @@
 UE_DEFINE_GAMEPLAY_TAG(TAG_ABILITY_SIMPLE_FAILURE_MESSAGE, "Ability.UserFacingSimpleActivateFail.Message");
 UE_DEFINE_GAMEPLAY_TAG(TAG_ABILITY_PLAY_MONTAGE_FAILURE_MESSAGE, "Ability.PlayMontageOnActivateFail.Message");
 
-UGAS_Ability::UGAS_Ability(const FObjectInitializer& ObjectInitializer)
+UExtGameplayAbility::UExtGameplayAbility(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	ReplicationPolicy = EGameplayAbilityReplicationPolicy::ReplicateNo;
@@ -39,17 +39,17 @@ UGAS_Ability::UGAS_Ability(const FObjectInitializer& ObjectInitializer)
 	bLogCancelation = false;
 }
 
-UExtAbilitySystemComponent* UGAS_Ability::GetExtAbilitySystemComponentFromActorInfo() const
+UExtAbilitySystemComponent* UExtGameplayAbility::GetExtAbilitySystemComponentFromActorInfo() const
 {
 	return (CurrentActorInfo ? Cast<UExtAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent.Get()) : nullptr);
 }
 
-APlayerController* UGAS_Ability::GetExtPlayerControllerFromActorInfo() const
+APlayerController* UExtGameplayAbility::GetExtPlayerControllerFromActorInfo() const
 {
 	return (CurrentActorInfo ? Cast<APlayerController>(CurrentActorInfo->PlayerController.Get()) : nullptr);
 }
 
-AController* UGAS_Ability::GetControllerFromActorInfo() const
+AController* UExtGameplayAbility::GetControllerFromActorInfo() const
 {
 	if (CurrentActorInfo)
 	{
@@ -79,12 +79,12 @@ AController* UGAS_Ability::GetControllerFromActorInfo() const
 	return nullptr;
 }
 
-AGAS_PlayerCharacter* UGAS_Ability::GetExtCharacterFromActorInfo() const
+AGAS_PlayerCharacter* UExtGameplayAbility::GetExtCharacterFromActorInfo() const
 {
 	return (CurrentActorInfo ? Cast<AGAS_PlayerCharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
 }
 
-void UGAS_Ability::NativeOnAbilityFailedToActivate(const FGameplayTagContainer& FailedReason) const
+void UExtGameplayAbility::NativeOnAbilityFailedToActivate(const FGameplayTagContainer& FailedReason) const
 {
 	bool bSimpleFailureFound = false;
 	for (FGameplayTag Reason : FailedReason)
@@ -121,7 +121,7 @@ void UGAS_Ability::NativeOnAbilityFailedToActivate(const FGameplayTagContainer& 
 	}
 }
 
-bool UGAS_Ability::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+bool UExtGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (!ActorInfo || !ActorInfo->AbilitySystemComponent.IsValid())
 	{
@@ -147,7 +147,7 @@ bool UGAS_Ability::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	return true;
 }
 
-void UGAS_Ability::SetCanBeCanceled(bool bCanBeCanceled)
+void UExtGameplayAbility::SetCanBeCanceled(bool bCanBeCanceled)
 {
 	// The ability can not block canceling if it's replaceable.
 	if (!bCanBeCanceled && (ActivationGroup == EExtAbilityActivationGroup::Exclusive_Replaceable))
@@ -159,7 +159,7 @@ void UGAS_Ability::SetCanBeCanceled(bool bCanBeCanceled)
 	Super::SetCanBeCanceled(bCanBeCanceled);
 }
 
-void UGAS_Ability::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+void UExtGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 
@@ -168,26 +168,26 @@ void UGAS_Ability::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, con
 	TryActivateAbilityOnSpawn(ActorInfo, Spec);
 }
 
-void UGAS_Ability::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+void UExtGameplayAbility::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	K2_OnAbilityRemoved();
 
 	Super::OnRemoveAbility(ActorInfo, Spec);
 }
 
-void UGAS_Ability::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UExtGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UGAS_Ability::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UExtGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	//ClearCameraMode();
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-bool UGAS_Ability::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, OUT FGameplayTagContainer* OptionalRelevantTags) const
+bool UExtGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (!Super::CheckCost(Handle, ActorInfo, OptionalRelevantTags) || !ActorInfo)
 	{
@@ -210,7 +210,7 @@ bool UGAS_Ability::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGam
 	return true;
 }
 
-void UGAS_Ability::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+void UExtGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
 {
 	Super::ApplyCost(Handle, ActorInfo, ActivationInfo);
 
@@ -264,7 +264,7 @@ void UGAS_Ability::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGam
 	//}
 }
 
-FGameplayEffectContextHandle UGAS_Ability::MakeEffectContext(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo) const
+FGameplayEffectContextHandle UExtGameplayAbility::MakeEffectContext(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo) const
 {
 	FGameplayEffectContextHandle ContextHandle = Super::MakeEffectContext(Handle, ActorInfo);
 
@@ -289,7 +289,7 @@ FGameplayEffectContextHandle UGAS_Ability::MakeEffectContext(const FGameplayAbil
 	return ContextHandle;
 }
 
-void UGAS_Ability::ApplyAbilityTagsToGameplayEffectSpec(FGameplayEffectSpec& Spec, FGameplayAbilitySpec* AbilitySpec) const
+void UExtGameplayAbility::ApplyAbilityTagsToGameplayEffectSpec(FGameplayEffectSpec& Spec, FGameplayAbilitySpec* AbilitySpec) const
 {
 	Super::ApplyAbilityTagsToGameplayEffectSpec(Spec, AbilitySpec);
 
@@ -304,7 +304,7 @@ void UGAS_Ability::ApplyAbilityTagsToGameplayEffectSpec(FGameplayEffectSpec& Spe
 	}
 }
 
-bool UGAS_Ability::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+bool UExtGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
 	// Specialized version to handle death exclusion and AbilityTags expansion via ASC
 
@@ -411,12 +411,12 @@ bool UGAS_Ability::DoesAbilitySatisfyTagRequirements(const UAbilitySystemCompone
 	return true;
 }
 
-void UGAS_Ability::OnPawnAvatarSet()
+void UExtGameplayAbility::OnPawnAvatarSet()
 {
 	K2_OnPawnAvatarSet();
 }
 
-void UGAS_Ability::GetAbilitySource(FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, float& OutSourceLevel, const IExtAbilitySourceInterface*& OutAbilitySource, AActor*& OutEffectCauser) const
+void UExtGameplayAbility::GetAbilitySource(FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, float& OutSourceLevel, const IExtAbilitySourceInterface*& OutAbilitySource, AActor*& OutEffectCauser) const
 {
 	OutSourceLevel = 0.0f;
 	OutAbilitySource = nullptr;
@@ -430,7 +430,7 @@ void UGAS_Ability::GetAbilitySource(FGameplayAbilitySpecHandle Handle, const FGa
 	OutAbilitySource = Cast<IExtAbilitySourceInterface>(SourceObject);
 }
 
-void UGAS_Ability::TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const
+void UExtGameplayAbility::TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const
 {
 	const bool bIsPredicting = (Spec.ActivationInfo.ActivationMode == EGameplayAbilityActivationMode::Predicting);
 
@@ -457,7 +457,7 @@ void UGAS_Ability::TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* Ac
 	}
 }
 
-bool UGAS_Ability::CanChangeActivationGroup(EExtAbilityActivationGroup NewGroup) const
+bool UExtGameplayAbility::CanChangeActivationGroup(EExtAbilityActivationGroup NewGroup) const
 {
 	if (!IsInstantiated() || !IsActive())
 	{
@@ -487,7 +487,7 @@ bool UGAS_Ability::CanChangeActivationGroup(EExtAbilityActivationGroup NewGroup)
 	return true;
 }
 
-bool UGAS_Ability::ChangeActivationGroup(EExtAbilityActivationGroup NewGroup)
+bool UExtGameplayAbility::ChangeActivationGroup(EExtAbilityActivationGroup NewGroup)
 {
 	//ENSURE_ABILITY_IS_INSTANTIATED_OR_RETURN(ChangeActivationGroup, false);
 

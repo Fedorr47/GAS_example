@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAS_Ability.h"
+#include "ExtGameplayAbility.h"
 #include "AbilitySystemComponent.h"
 #include "NativeGameplayTags.h"
 
@@ -18,14 +18,14 @@ struct FGameplayAbilityTargetDataHandle;
 
 GAS_EXAMPLE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Gameplay_AbilityInputBlocked);
 
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class GAS_EXAMPLE_API UExtAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 
 public:
 
-	UExtAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UExtAbilitySystemComponent(const FObjectInitializer& ObjectInitializer);
 
 	//~UActorComponent interface
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -33,7 +33,7 @@ public:
 
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
 
-	typedef TFunctionRef<bool(const UGAS_Ability* LyraAbility, FGameplayAbilitySpecHandle Handle)> TShouldCancelAbilityFunc;
+	typedef TFunctionRef<bool(const UExtGameplayAbility* LyraAbility, FGameplayAbilitySpecHandle Handle)> TShouldCancelAbilityFunc;
 	void CancelAbilitiesByFunc(TShouldCancelAbilityFunc ShouldCancelFunc, bool bReplicateCancelAbility);
 
 	void CancelInputActivatedAbilities(bool bReplicateCancelAbility);
@@ -45,9 +45,9 @@ public:
 	void ClearAbilityInput();
 
 	bool IsActivationGroupBlocked(EExtAbilityActivationGroup Group) const;
-	void AddAbilityToActivationGroup(EExtAbilityActivationGroup Group, UGAS_Ability* ExtAbility);
-	void RemoveAbilityFromActivationGroup(EExtAbilityActivationGroup Group, UGAS_Ability* ExtAbility);
-	void CancelActivationGroupAbilities(EExtAbilityActivationGroup Group, UGAS_Ability* IgnoreLyraAbility, bool bReplicateCancelAbility);
+	void AddAbilityToActivationGroup(EExtAbilityActivationGroup Group, UExtGameplayAbility* ExtAbility);
+	void RemoveAbilityFromActivationGroup(EExtAbilityActivationGroup Group, UExtGameplayAbility* ExtAbility);
+	void CancelActivationGroupAbilities(EExtAbilityActivationGroup Group, UExtGameplayAbility* IgnoreLyraAbility, bool bReplicateCancelAbility);
 
 	// Uses a gameplay effect to add the specified dynamic granted tag.
 	void AddDynamicTagGameplayEffect(const FGameplayTag& Tag);
@@ -99,5 +99,8 @@ protected:
 
 	// Number of abilities running in each activation group.
 	int32 ActivationGroupCounts[(uint8)EExtAbilityActivationGroup::MAX];
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	int32 TestValue;
 };
 

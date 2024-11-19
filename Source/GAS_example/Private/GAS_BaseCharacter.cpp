@@ -4,8 +4,9 @@
 #include "GAS_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "ExtAbilitySystemComponent.h"
-#include "GAS_Ability.h"
-#include "GAS_CharacterAttributeSet.h"
+#include "ExtGameplayAbility.h"
+#include "ExtCharacterAttributeSet.h"
+#include "ExtAbilitySet.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -14,8 +15,8 @@
 AGAS_BaseCharacter::AGAS_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	AbilitySystemComponent = CreateDefaultSubobject<UExtAbilitySystemComponent>("AbilitySystemComp");
-	CharacterAttributesSet = CreateDefaultSubobject<UGAS_CharacterAttributeSet>("CharacterAttributeSet");
+    ExtAbilitySystemComponent = CreateDefaultSubobject<UExtAbilitySystemComponent>(TEXT("ExtAbilitySystemComponent"));
+	CharacterAttributesSet = CreateDefaultSubobject<UExtCharacterAttributeSet>("CharacterAttributeSet");
 }
 
 // Called when the game starts or when spawned
@@ -26,46 +27,27 @@ void AGAS_BaseCharacter::BeginPlay()
 	CharacterAttributesSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
     CharacterAttributesSet->OnAccelerationSpeed.AddUObject(this, &AGAS_BaseCharacter::OnAccelerationSpeedChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
+	ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
+	ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
 	
 }
 
 UAbilitySystemComponent* AGAS_BaseCharacter::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return ExtAbilitySystemComponent;
 }
 
-void AGAS_BaseCharacter::InitializeAbilities()
+void AGAS_BaseCharacter::InitializeAbilitySystem()
 {
     // Give Abilities, Server only
-    if (!HasAuthority() || !AbilitySystemComponent)
+    if (!HasAuthority() || !ExtAbilitySystemComponent)
         return;
 
-    for (TSubclassOf<UGAS_Ability>& Ability : DefaultAbilities)
+    for (const UExtAbilitySet* AbilitySet : AbilitySets)
     {
-        //[[maybe_unused]] FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, static_cast<int32>(Ability.GetDefaultObject()->GetAbilityInputID()), this));
-    }
-}
-
-void AGAS_BaseCharacter::InitializeAttributes()
-{
-}
-
-void AGAS_BaseCharacter::InitializeEffects()
-{
-    if (!AbilitySystemComponent)
-        return;
-
-    FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-    EffectContext.AddSourceObject(this);
-
-    for (TSubclassOf<UGameplayEffect>& Effect : DefaultEffects)
-    {
-        FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Effect, 1, EffectContext);
-        if (SpecHandle.IsValid())
+        if (AbilitySet)
         {
-            FActiveGameplayEffectHandle GEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+            AbilitySet->GiveToAbilitySystem(ExtAbilitySystemComponent, nullptr);
         }
     }
 }
@@ -94,13 +76,12 @@ void AGAS_BaseCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    if (!AbilitySystemComponent)
+    if (!ExtAbilitySystemComponent)
         return;
 
-    AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-    InitializeEffects();
-    InitializeAbilities();
+    ExtAbilitySystemComponent->InitAbilityActorInfo(this, this);
+    
+    InitializeAbilitySystem();
 }
 
 

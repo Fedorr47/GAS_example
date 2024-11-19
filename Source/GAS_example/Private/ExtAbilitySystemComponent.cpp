@@ -7,7 +7,7 @@
 
 #include "ExtAbilitySystemComponent.h"
 
-#include "GAS_Ability.h"
+#include "ExtGameplayAbility.h"
 #include "ExtAbilityTagRelationshipMapping.h"
 
 #include "Engine/World.h"
@@ -24,7 +24,6 @@ UExtAbilitySystemComponent::UExtAbilitySystemComponent(const FObjectInitializer&
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
 
-	FMemory::Memset(ActivationGroupCounts, 0, sizeof(ActivationGroupCounts));
 }
 
 void UExtAbilitySystemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -54,7 +53,7 @@ void UExtAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AAct
 		// Notify all abilities that a new pawn avatar has been set
 		for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
 		{
-			UGAS_Ability* LyraAbilityCDO = Cast<UGAS_Ability>(AbilitySpec.Ability);
+			UExtGameplayAbility* LyraAbilityCDO = Cast<UExtGameplayAbility>(AbilitySpec.Ability);
 			if (!LyraAbilityCDO)
 			{
 				continue;
@@ -65,7 +64,7 @@ void UExtAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AAct
 				TArray<UGameplayAbility*> Instances = AbilitySpec.GetAbilityInstances();
 				for (UGameplayAbility* AbilityInstance : Instances)
 				{
-					UGAS_Ability* LyraAbilityInstance = Cast<UGAS_Ability>(AbilityInstance);
+					UExtGameplayAbility* LyraAbilityInstance = Cast<UExtGameplayAbility>(AbilityInstance);
 					if (LyraAbilityInstance)
 					{
 						// Ability instances may be missing for replays
@@ -101,7 +100,7 @@ void UExtAbilitySystemComponent::TryActivateAbilitiesOnSpawn()
 	ABILITYLIST_SCOPE_LOCK();
 	for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (const UGAS_Ability* LyraAbilityCDO = Cast<UGAS_Ability>(AbilitySpec.Ability))
+		if (const UExtGameplayAbility* LyraAbilityCDO = Cast<UExtGameplayAbility>(AbilitySpec.Ability))
 		{
 			LyraAbilityCDO->TryActivateAbilityOnSpawn(AbilityActorInfo.Get(), AbilitySpec);
 		}
@@ -118,7 +117,7 @@ void UExtAbilitySystemComponent::CancelAbilitiesByFunc(TShouldCancelAbilityFunc 
 			continue;
 		}
 
-		UGAS_Ability* LyraAbilityCDO = Cast<UGAS_Ability>(AbilitySpec.Ability);
+		UExtGameplayAbility* LyraAbilityCDO = Cast<UExtGameplayAbility>(AbilitySpec.Ability);
 		if (!LyraAbilityCDO)
 		{
 			//UE_LOG(LogLyraAbilitySystem, Error, TEXT("CancelAbilitiesByFunc: Non-LyraGameplayAbility %s was Granted to ASC. Skipping."), *AbilitySpec.Ability.GetName());
@@ -131,7 +130,7 @@ void UExtAbilitySystemComponent::CancelAbilitiesByFunc(TShouldCancelAbilityFunc 
 			TArray<UGameplayAbility*> Instances = AbilitySpec.GetAbilityInstances();
 			for (UGameplayAbility* AbilityInstance : Instances)
 			{
-				UGAS_Ability* LyraAbilityInstance = CastChecked<UGAS_Ability>(AbilityInstance);
+				UExtGameplayAbility* LyraAbilityInstance = CastChecked<UExtGameplayAbility>(AbilityInstance);
 
 				if (ShouldCancelFunc(LyraAbilityInstance, AbilitySpec.Handle))
 				{
@@ -161,7 +160,7 @@ void UExtAbilitySystemComponent::CancelAbilitiesByFunc(TShouldCancelAbilityFunc 
 
 void UExtAbilitySystemComponent::CancelInputActivatedAbilities(bool bReplicateCancelAbility)
 {
-	auto ShouldCancelFunc = [this](const UGAS_Ability* LyraAbility, FGameplayAbilitySpecHandle Handle)
+	auto ShouldCancelFunc = [this](const UExtGameplayAbility* LyraAbility, FGameplayAbilitySpecHandle Handle)
 	{
 		const EExtAbilityActivationPolicy ActivationPolicy = LyraAbility->GetActivationPolicy();
 		return ((ActivationPolicy == EExtAbilityActivationPolicy::OnInputTriggered) || (ActivationPolicy == EExtAbilityActivationPolicy::WhileInputActive));
@@ -248,7 +247,7 @@ void UExtAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 		{
 			if (AbilitySpec->Ability && !AbilitySpec->IsActive())
 			{
-				const UGAS_Ability* LyraAbilityCDO = Cast<UGAS_Ability>(AbilitySpec->Ability);
+				const UExtGameplayAbility* LyraAbilityCDO = Cast<UExtGameplayAbility>(AbilitySpec->Ability);
 				if (LyraAbilityCDO && LyraAbilityCDO->GetActivationPolicy() == EExtAbilityActivationPolicy::WhileInputActive)
 				{
 					AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
@@ -275,7 +274,7 @@ void UExtAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 				}
 				else
 				{
-					const UGAS_Ability* LyraAbilityCDO = Cast<UGAS_Ability>(AbilitySpec->Ability);
+					const UExtGameplayAbility* LyraAbilityCDO = Cast<UExtGameplayAbility>(AbilitySpec->Ability);
 
 					if (LyraAbilityCDO && LyraAbilityCDO->GetActivationPolicy() == EExtAbilityActivationPolicy::OnInputTriggered)
 					{
@@ -334,7 +333,7 @@ void UExtAbilitySystemComponent::NotifyAbilityActivated(const FGameplayAbilitySp
 {
 	Super::NotifyAbilityActivated(Handle, Ability);
 
-	if (UGAS_Ability* LyraAbility = Cast<UGAS_Ability>(Ability))
+	if (UExtGameplayAbility* LyraAbility = Cast<UExtGameplayAbility>(Ability))
 	{
 		AddAbilityToActivationGroup(LyraAbility->GetActivationGroup(), LyraAbility);
 	}
@@ -360,7 +359,7 @@ void UExtAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle H
 {
 	Super::NotifyAbilityEnded(Handle, Ability, bWasCancelled);
 
-	if (UGAS_Ability* LyraAbility = Cast<UGAS_Ability>(Ability))
+	if (UExtGameplayAbility* LyraAbility = Cast<UExtGameplayAbility>(Ability))
 	{
 		RemoveAbilityFromActivationGroup(LyraAbility->GetActivationGroup(), LyraAbility);
 	}
@@ -411,7 +410,7 @@ void UExtAbilitySystemComponent::HandleAbilityFailed(const UGameplayAbility* Abi
 {
 	//UE_LOG(LogLyraAbilitySystem, Warning, TEXT("Ability %s failed to activate (tags: %s)"), *GetPathNameSafe(Ability), *FailureReason.ToString());
 
-	if (const UGAS_Ability* LyraAbility = Cast<const UGAS_Ability>(Ability))
+	if (const UExtGameplayAbility* LyraAbility = Cast<const UExtGameplayAbility>(Ability))
 	{
 		LyraAbility->OnAbilityFailedToActivate(FailureReason);
 	}	
@@ -442,7 +441,7 @@ bool UExtAbilitySystemComponent::IsActivationGroupBlocked(EExtAbilityActivationG
 	return bBlocked;
 }
 
-void UExtAbilitySystemComponent::AddAbilityToActivationGroup(EExtAbilityActivationGroup Group, UGAS_Ability* LyraAbility)
+void UExtAbilitySystemComponent::AddAbilityToActivationGroup(EExtAbilityActivationGroup Group, UExtGameplayAbility* LyraAbility)
 {
 	check(LyraAbility);
 	check(ActivationGroupCounts[(uint8)Group] < INT32_MAX);
@@ -474,7 +473,7 @@ void UExtAbilitySystemComponent::AddAbilityToActivationGroup(EExtAbilityActivati
 	}
 }
 
-void UExtAbilitySystemComponent::RemoveAbilityFromActivationGroup(EExtAbilityActivationGroup Group, UGAS_Ability* LyraAbility)
+void UExtAbilitySystemComponent::RemoveAbilityFromActivationGroup(EExtAbilityActivationGroup Group, UExtGameplayAbility* LyraAbility)
 {
 	check(LyraAbility);
 	check(ActivationGroupCounts[(uint8)Group] > 0);
@@ -482,9 +481,9 @@ void UExtAbilitySystemComponent::RemoveAbilityFromActivationGroup(EExtAbilityAct
 	ActivationGroupCounts[(uint8)Group]--;
 }
 
-void UExtAbilitySystemComponent::CancelActivationGroupAbilities(EExtAbilityActivationGroup Group, UGAS_Ability* IgnoreLyraAbility, bool bReplicateCancelAbility)
+void UExtAbilitySystemComponent::CancelActivationGroupAbilities(EExtAbilityActivationGroup Group, UExtGameplayAbility* IgnoreLyraAbility, bool bReplicateCancelAbility)
 {
-	auto ShouldCancelFunc = [this, Group, IgnoreLyraAbility](const UGAS_Ability* LyraAbility, FGameplayAbilitySpecHandle Handle)
+	auto ShouldCancelFunc = [this, Group, IgnoreLyraAbility](const UExtGameplayAbility* LyraAbility, FGameplayAbilitySpecHandle Handle)
 	{
 		return ((LyraAbility->GetActivationGroup() == Group) && (LyraAbility != IgnoreLyraAbility));
 	};

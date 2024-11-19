@@ -7,6 +7,7 @@
 #include "GAS_examplePlayerController.generated.h"
 
 class UInputMappingContext;
+class UExtAbilitySystemComponent;
 
 /**
  *
@@ -21,6 +22,10 @@ protected:
 	/** Input Mapping Context to be used for player input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* InputMappingContext;
+
+	UExtAbilitySystemComponent* GetExtAbilitySystemComponent() const;
+	virtual void PreProcessInput(const float DeltaTime, const bool bGamePaused) override;
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 
 	// Begin Actor interface
 protected:
