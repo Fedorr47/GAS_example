@@ -4,7 +4,7 @@
 #include "Controller/GAS_examplePlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Abilities/ExtAbilitySystemComponent.h"
-#include "Character/GAS_BaseCharacter.h"
+#include "Character/ExtBaseCharacter.h"
 #include "Engine/LocalPlayer.h"
 
 void AGAS_examplePlayerController::BeginPlay()
@@ -21,7 +21,7 @@ void AGAS_examplePlayerController::BeginPlay()
 
 UExtAbilitySystemComponent* AGAS_examplePlayerController::GetExtAbilitySystemComponent() const
 {
-	const AGAS_BaseCharacter* character = CastChecked<AGAS_BaseCharacter>(GetCharacter(), ECastCheckedType::NullAllowed);
+	const AExtBaseCharacter* character = CastChecked<AExtBaseCharacter>(GetCharacter(), ECastCheckedType::NullAllowed);
 	if (IsValid(character))
 	{
 		return Cast<UExtAbilitySystemComponent>(character->GetAbilitySystemComponent());

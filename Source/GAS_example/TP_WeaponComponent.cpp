@@ -2,7 +2,7 @@
 
 
 #include "TP_WeaponComponent.h"
-#include "Character/Player/GAS_PlayerCharacter.h"
+#include "Character/Player/ExtPlayerCharacter.h"
 #include "GAS_exampleProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
@@ -66,7 +66,7 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-bool UTP_WeaponComponent::AttachWeapon(AGAS_PlayerCharacter* TargetCharacter)
+bool UTP_WeaponComponent::AttachWeapon(AExtPlayerCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
 

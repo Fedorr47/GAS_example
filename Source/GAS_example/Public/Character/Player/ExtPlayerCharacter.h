@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/GAS_BaseCharacter.h"
-#include "InputDataConfig.h" 
-#include "GAS_PlayerCharacter.generated.h"
+#include "Character/ExtBaseCharacter.h"
+#include "Input/InputDataConfig.h" 
+#include "ExtPlayerCharacter.generated.h"
 
 class UCameraComponent;
 class UInputMappingContext;
@@ -16,7 +16,7 @@ struct FInputActionValue;
  * 
  */
 UCLASS()
-class GAS_EXAMPLE_API AGAS_PlayerCharacter : public AGAS_BaseCharacter
+class GAS_EXAMPLE_API AExtPlayerCharacter : public AExtBaseCharacter
 {
 	GENERATED_BODY()
 
@@ -38,7 +38,7 @@ class GAS_EXAMPLE_API AGAS_PlayerCharacter : public AGAS_BaseCharacter
     
 public:
     // Sets default values for this character's properties
-    AGAS_PlayerCharacter();
+    AExtPlayerCharacter();
 
     USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 

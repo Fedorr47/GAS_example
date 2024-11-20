@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ExtEnhancedInputComponent.h"
+#include "Input/ExtEnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ExtEnhancedInputComponent)

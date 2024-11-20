@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "../GAS_example.h"
 #include "ExtGameplayAbility.generated.h"
 
-class AGAS_PlayerCharacter;
+class AExtPlayerCharacter;
 class UExtAbilitySystemComponent;
 class IExtAbilitySourceInterface;
 
@@ -75,7 +74,7 @@ public:
 	AController* GetControllerFromActorInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Ext|Ability")
-	AGAS_PlayerCharacter* GetExtCharacterFromActorInfo() const;
+	AExtPlayerCharacter* GetExtCharacterFromActorInfo() const;
 	
 	EExtAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy; }
 	EExtAbilityActivationGroup GetActivationGroup() const { return ActivationGroup; }

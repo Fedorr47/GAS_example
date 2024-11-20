@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAS_BaseAttributeSet.h"
+#include "ExtBaseAttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "ExtCharacterAttributeSet.generated.h"
 
@@ -14,7 +14,7 @@ DECLARE_MULTICAST_DELEGATE_FourParams(FAccelerationSpeedEvent, AActor*  /*Effect
  * 
  */
 UCLASS()
-class GAS_EXAMPLE_API UExtCharacterAttributeSet : public UGAS_BaseAttributeSet
+class GAS_EXAMPLE_API UExtCharacterAttributeSet : public UExtBaseAttributeSet
 {
 	GENERATED_BODY()
 public:

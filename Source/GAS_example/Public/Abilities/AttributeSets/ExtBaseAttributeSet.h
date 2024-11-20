@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "GAS_BaseAttributeSet.generated.h"
+#include "ExtBaseAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -16,7 +16,7 @@
  * 
  */
 UCLASS()
-class GAS_EXAMPLE_API UGAS_BaseAttributeSet : public UAttributeSet
+class GAS_EXAMPLE_API UExtBaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 protected:

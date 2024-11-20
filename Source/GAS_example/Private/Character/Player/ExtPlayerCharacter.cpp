@@ -1,25 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/Player/GAS_PlayerCharacter.h"
+#include "Character/Player/ExtPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "EnhancedInputComponent.h"
-#include "ExtCharacterMovementComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/ExtAbilitySystemComponent.h"
-#include "ExtEnhancedInputComponent.h"
+#include "Input//ExtEnhancedInputComponent.h"
 #include "ExtGameplayTags.h"
-#include "Abilities/ExtGameplayAbility.h"
 #include "Abilities/AttributeSets/ExtCharacterAttributeSet.h"
-#include "../GAS_example.h"
 
-AGAS_PlayerCharacter::AGAS_PlayerCharacter()
+AExtPlayerCharacter::AExtPlayerCharacter()
 {
     // Set size for collision capsule
     GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -53,17 +48,17 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
     Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 }
 
-float AGAS_PlayerCharacter::GetMovementSpeed() const
+float AExtPlayerCharacter::GetMovementSpeed() const
 {
     return IsValid(CharacterAttributesSet) ? CharacterAttributesSet->GetMovementSpeed() : 0.0f;
 }
 
-void AGAS_PlayerCharacter::BeginPlay()
+void AExtPlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 }
 
-void AGAS_PlayerCharacter::Look(const FInputActionValue& Value)
+void AExtPlayerCharacter::Look(const FInputActionValue& Value)
 {
     // input is a Vector2D
     FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -76,7 +71,7 @@ void AGAS_PlayerCharacter::Look(const FInputActionValue& Value)
     }
 }
 
-void AGAS_PlayerCharacter::Move(const FInputActionValue& Value)
+void AExtPlayerCharacter::Move(const FInputActionValue& Value)
 {
     // input is a Vector2D
     FVector2D MovementVector = Value.Get<FVector2D>();
@@ -99,7 +94,7 @@ void AGAS_PlayerCharacter::Move(const FInputActionValue& Value)
     }
 }
 
-void AGAS_PlayerCharacter::SendAbilityLocalInput(const FInputActionValue& Value, int32 InputID)
+void AExtPlayerCharacter::SendAbilityLocalInput(const FInputActionValue& Value, int32 InputID)
 {
     if (!ExtAbilitySystemComponent)
         return;
@@ -114,7 +109,7 @@ void AGAS_PlayerCharacter::SendAbilityLocalInput(const FInputActionValue& Value,
     }
 }
 
-void AGAS_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AExtPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     // Add Input Mapping Context
     UEnhancedInputLocalPlayerSubsystem* Subsystem = nullptr;
@@ -148,7 +143,7 @@ void AGAS_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
     }
 }
 
-void AGAS_PlayerCharacter::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+void AExtPlayerCharacter::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
     if (UExtAbilitySystemComponent* ExtASC = Cast<UExtAbilitySystemComponent>(GetAbilitySystemComponent()))
     {
@@ -156,7 +151,7 @@ void AGAS_PlayerCharacter::Input_AbilityInputTagPressed(FGameplayTag InputTag)
     }
 }
 
-void AGAS_PlayerCharacter::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+void AExtPlayerCharacter::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
     if (UExtAbilitySystemComponent* ExtASC = Cast<UExtAbilitySystemComponent>(GetAbilitySystemComponent()))
     {

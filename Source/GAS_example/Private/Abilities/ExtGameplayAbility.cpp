@@ -3,12 +3,12 @@
 #include "Abilities/ExtGameplayAbility.h"
 
 #include "Abilities/ExtAbilitySystemComponent.h"
-#include "Character/Player/GAS_PlayerCharacter.h"
+#include "Character/Player/ExtPlayerCharacter.h"
 #include "ExtGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemGlobals.h"
-#include "ExtAbilitySourceInterface.h"
-#include "ExtGameplayEffectContext.h"
+#include "Abilities/ExtAbilitySourceInterface.h"
+#include "Abilities/GameplayEffects/ExtGameplayEffectContext.h"
 #include "GameFramework/PlayerState.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ExtGameplayAbility)
@@ -79,9 +79,9 @@ AController* UExtGameplayAbility::GetControllerFromActorInfo() const
 	return nullptr;
 }
 
-AGAS_PlayerCharacter* UExtGameplayAbility::GetExtCharacterFromActorInfo() const
+AExtPlayerCharacter* UExtGameplayAbility::GetExtCharacterFromActorInfo() const
 {
-	return (CurrentActorInfo ? Cast<AGAS_PlayerCharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
+	return (CurrentActorInfo ? Cast<AExtPlayerCharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
 }
 
 void UExtGameplayAbility::NativeOnAbilityFailedToActivate(const FGameplayTagContainer& FailedReason) const

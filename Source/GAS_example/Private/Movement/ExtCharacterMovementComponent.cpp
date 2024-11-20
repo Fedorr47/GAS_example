@@ -1,11 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ExtCharacterMovementComponent.h"
+#include "Movement/ExtCharacterMovementComponent.h"
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
-#include "Character/GAS_BaseCharacter.h"
-#include "Character/Player/GAS_PlayerCharacter.h"
+#include "Character/Player/ExtPlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
@@ -129,7 +128,7 @@ float UExtCharacterMovementComponent::GetMaxSpeed() const
 		}
 	}
 
-	const AGAS_PlayerCharacter* character = Cast<AGAS_PlayerCharacter>(GetOwner());
+	const AExtPlayerCharacter* character = Cast<AExtPlayerCharacter>(GetOwner());
 
 	const float MaxSpeed = character->GetMovementSpeed();
 

@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GAS_exampleGameMode.h"
-#include "Character/Player/GAS_PlayerCharacter.h"
+#include "Character/Player/ExtPlayerCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AGAS_exampleGameMode::AGAS_exampleGameMode()

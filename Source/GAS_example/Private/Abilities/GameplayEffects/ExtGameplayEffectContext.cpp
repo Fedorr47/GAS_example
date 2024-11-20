@@ -1,6 +1,6 @@
-#include "ExtGameplayEffectContext.h"
+#include "Abilities/GameplayEffects/ExtGameplayEffectContext.h"
 
-#include "ExtAbilitySourceInterface.h"
+#include "Abilities/ExtAbilitySourceInterface.h"
 #include "Engine/HitResult.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 

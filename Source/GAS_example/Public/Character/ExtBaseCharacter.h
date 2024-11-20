@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
-#include "GAS_BaseCharacter.generated.h"
+#include "ExtBaseCharacter.generated.h"
 
 class UExtGameplayAbility;
 class UExtCharacterAttributeSet;
@@ -14,13 +14,13 @@ class UExtAbilitySystemComponent;
 class UExtAbilitySet;
 
 UCLASS()
-class GAS_EXAMPLE_API AGAS_BaseCharacter : public ACharacter, public IAbilitySystemInterface
+class GAS_EXAMPLE_API AExtBaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	AGAS_BaseCharacter();
+	AExtBaseCharacter();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
