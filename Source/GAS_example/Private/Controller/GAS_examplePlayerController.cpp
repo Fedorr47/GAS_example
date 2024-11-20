@@ -1,10 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "GAS_examplePlayerController.h"
+#include "Controller/GAS_examplePlayerController.h"
 #include "EnhancedInputSubsystems.h"
-#include "ExtAbilitySystemComponent.h"
-#include "GAS_BaseCharacter.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
+#include "Character/GAS_BaseCharacter.h"
 #include "Engine/LocalPlayer.h"
 
 void AGAS_examplePlayerController::BeginPlay()

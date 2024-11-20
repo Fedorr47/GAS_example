@@ -54,22 +54,29 @@ public:
     ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, MaxStamina);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData AccelerationSpeed;
-	ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, AccelerationSpeed);
+	FGameplayAttributeData MovementSpeed;
+	ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, MovementSpeed);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxAccelerationSpeed;
-	ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, MaxAccelerationSpeed);
+	FGameplayAttributeData MaxMovementSpeed;
+	ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, MaxMovementSpeed);
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AccelerationSpeed;
+	ATTRIBUTE_ACCESSORS(UExtCharacterAttributeSet, AccelerationSpeed);
+	
 
     mutable FDamageTakenEvent OnDamageTaken;
 	mutable FAccelerationSpeedEvent OnAccelerationSpeed;
 
 protected:
     virtual void ClampAttributeOnChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data);
 
-    virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const;
 
-    virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue);
+	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
 };

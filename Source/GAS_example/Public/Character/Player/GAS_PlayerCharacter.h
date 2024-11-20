@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAS_BaseCharacter.h"
+#include "Character/GAS_BaseCharacter.h"
 #include "InputDataConfig.h" 
 #include "GAS_PlayerCharacter.generated.h"
 
@@ -43,7 +43,7 @@ public:
     USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ext|Character")
-    float GetMoveAccelerated() const;
+    float GetMovementSpeed() const;
 
 protected:
     // Called when the game starts or when spawned

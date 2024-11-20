@@ -30,6 +30,9 @@ public:
 	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
 	void BindAbilityActions(const UInputDataConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& BindHandles);
 
+	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+	void BindAdvancedAbilityActions(const UInputDataConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& BindHandles);
+
 	void RemoveBinds(TArray<uint32>& BindHandles);
 };
 
@@ -61,6 +64,28 @@ void UExtEnhancedInputComponent::BindAbilityActions(const UInputDataConfig* Inpu
 			if (ReleasedFunc)
 			{
 				BindHandles.Add(BindAction(Action.InputAction, ETriggerEvent::Completed, Object, ReleasedFunc, Action.InputTag).GetHandle());
+			}
+		}
+	}
+}
+
+template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+void UExtEnhancedInputComponent::BindAdvancedAbilityActions(const UInputDataConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& AdvancedBindHandles)
+{
+	check(InputConfig);
+
+	for (const FExtInputAction& Action : InputConfig->AdvancedAbilityInputActions)
+	{
+		if (Action.InputAction && Action.InputTag.IsValid())
+		{
+			if (PressedFunc)
+			{
+				AdvancedBindHandles.Add(BindAction(Action.InputAction, ETriggerEvent::Started, Object, PressedFunc, Action.InputTag).GetHandle());
+			}
+
+			if (ReleasedFunc)
+			{
+				AdvancedBindHandles.Add(BindAction(Action.InputAction, ETriggerEvent::Completed, Object, ReleasedFunc, Action.InputTag).GetHandle());
 			}
 		}
 	}

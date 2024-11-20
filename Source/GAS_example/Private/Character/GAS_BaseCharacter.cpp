@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS_BaseCharacter.h"
+#include "Character/GAS_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
-#include "ExtAbilitySystemComponent.h"
-#include "ExtGameplayAbility.h"
-#include "ExtCharacterAttributeSet.h"
-#include "ExtAbilitySet.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
+#include "Abilities/ExtGameplayAbility.h"
+#include "Abilities/AttributeSets/ExtCharacterAttributeSet.h"
+#include "Abilities/AttributeSets/ExtAbilitySet.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -16,7 +16,6 @@ AGAS_BaseCharacter::AGAS_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
     ExtAbilitySystemComponent = CreateDefaultSubobject<UExtAbilitySystemComponent>(TEXT("ExtAbilitySystemComponent"));
-	CharacterAttributesSet = CreateDefaultSubobject<UExtCharacterAttributeSet>("CharacterAttributeSet");
 }
 
 // Called when the game starts or when spawned
@@ -24,12 +23,15 @@ void AGAS_BaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CharacterAttributesSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
-    CharacterAttributesSet->OnAccelerationSpeed.AddUObject(this, &AGAS_BaseCharacter::OnAccelerationSpeedChanged);
+    if (IsValid(ExtAbilitySystemComponent) && IsValid(CharacterAttributesSet))
+    {
+        CharacterAttributesSet->OnDamageTaken.AddUObject(this, &AGAS_BaseCharacter::OnDamageTakenChanged);
+        CharacterAttributesSet->OnAccelerationSpeed.AddUObject(this, &AGAS_BaseCharacter::OnAccelerationSpeedChanged);
 
-	ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
-	ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
-	
+        ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetHealthAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnHealthAttributeChanged);
+        ExtAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(CharacterAttributesSet->GetShieldAttribute()).AddUObject(this, &AGAS_BaseCharacter::OnShieldAttributeChanged);
+    }
+    
 }
 
 UAbilitySystemComponent* AGAS_BaseCharacter::GetAbilitySystemComponent() const
@@ -42,6 +44,8 @@ void AGAS_BaseCharacter::InitializeAbilitySystem()
     // Give Abilities, Server only
     if (!HasAuthority() || !ExtAbilitySystemComponent)
         return;
+
+    CharacterAttributesSet = ExtAbilitySystemComponent->GetSet<UExtCharacterAttributeSet>();
 
     for (const UExtAbilitySet* AbilitySet : AbilitySets)
     {

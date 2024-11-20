@@ -99,8 +99,5 @@ protected:
 
 	// Number of abilities running in each activation group.
 	int32 ActivationGroupCounts[(uint8)EExtAbilityActivationGroup::MAX];
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
-	int32 TestValue;
 };
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAS_BaseCharacter.h"
+#include "Character/GAS_BaseCharacter.h"
 #include "GAS_EnemyCharacter.generated.h"
 
 /**

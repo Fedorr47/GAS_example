@@ -1,13 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ExtAbilitySystemComponent.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
 
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-#include "ExtAbilitySystemComponent.h"
-
-#include "ExtGameplayAbility.h"
+#include "Abilities/ExtGameplayAbility.h"
 #include "ExtAbilityTagRelationshipMapping.h"
 
 #include "Engine/World.h"
@@ -23,18 +19,10 @@ UExtAbilitySystemComponent::UExtAbilitySystemComponent(const FObjectInitializer&
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
-
 }
 
 void UExtAbilitySystemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	/*
-	if (UGameplayAb* GlobalAbilitySystem = UWorld::GetSubsystem<ULyraGlobalAbilitySystem>(GetWorld()))
-	{
-		GlobalAbilitySystem->UnregisterASC(this);
-	}
-	*/
-
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -77,19 +65,6 @@ void UExtAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AAct
 				LyraAbilityCDO->OnPawnAvatarSet();
 			}
 		}
-
-		// Register with the global system once we actually have a pawn avatar. We wait until this time since some globally-applied effects may require an avatar.
-		/*
-		if (ULyraGlobalAbilitySystem* GlobalAbilitySystem = UWorld::GetSubsystem<ULyraGlobalAbilitySystem>(GetWorld()))
-		{
-			GlobalAbilitySystem->RegisterASC(this);
-		}
-		
-		if (ULyraAnimInstance* LyraAnimInst = Cast<ULyraAnimInstance>(ActorInfo->GetAnimInstance()))
-		{
-			LyraAnimInst->InitializeWithAbilitySystem(this);
-		}
-		*/
 
 		TryActivateAbilitiesOnSpawn();
 	}

@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ExtAbilitySet.h"
+#include "Abilities/AttributeSets/ExtAbilitySet.h"
 
-#include "ExtGameplayAbility.h"
-#include "ExtAbilitySystemComponent.h"
+#include "Abilities/ExtGameplayAbility.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ExtAbilitySet)
 

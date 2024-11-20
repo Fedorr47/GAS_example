@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ExtGameplayAbility.h"
+#include "Abilities/ExtGameplayAbility.h"
 
-#include "ExtAbilitySystemComponent.h"
-#include "GAS_PlayerCharacter.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
+#include "Character/Player/GAS_PlayerCharacter.h"
 #include "ExtGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemGlobals.h"

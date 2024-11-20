@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS_PlayerCharacter.h"
+#include "Character/Player/GAS_PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -12,11 +12,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "AbilitySystemComponent.h"
-#include "ExtAbilitySystemComponent.h"
+#include "Abilities/ExtAbilitySystemComponent.h"
 #include "ExtEnhancedInputComponent.h"
 #include "ExtGameplayTags.h"
-#include "ExtGameplayAbility.h"
-#include "ExtCharacterAttributeSet.h"
+#include "Abilities/ExtGameplayAbility.h"
+#include "Abilities/AttributeSets/ExtCharacterAttributeSet.h"
 #include "../GAS_example.h"
 
 AGAS_PlayerCharacter::AGAS_PlayerCharacter()
@@ -53,9 +53,9 @@ AGAS_PlayerCharacter::AGAS_PlayerCharacter()
     Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 }
 
-float AGAS_PlayerCharacter::GetMoveAccelerated() const
+float AGAS_PlayerCharacter::GetMovementSpeed() const
 {
-    return IsValid(CharacterAttributesSet) ? CharacterAttributesSet->GetAccelerationSpeed() : 0.0f;
+    return IsValid(CharacterAttributesSet) ? CharacterAttributesSet->GetMovementSpeed() : 0.0f;
 }
 
 void AGAS_PlayerCharacter::BeginPlay()
@@ -139,6 +139,8 @@ void AGAS_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
             
             TArray<uint32> BindHandles;
             ExtIMC->BindAbilityActions(InputActions, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+            TArray<uint32> AdvancedBindHandles;
+            ExtIMC->BindAdvancedAbilityActions(InputActions, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ AdvancedBindHandles);
 
             ExtIMC->BindNativeAction(InputActions, ExtGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
             ExtIMC->BindNativeAction(InputActions, ExtGameplayTags::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Look, /*bLogIfNotFound=*/ false);

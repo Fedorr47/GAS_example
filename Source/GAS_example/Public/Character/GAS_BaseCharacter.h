@@ -29,7 +29,7 @@ protected:
 	UExtAbilitySystemComponent* ExtAbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UExtCharacterAttributeSet* CharacterAttributesSet;
+	TObjectPtr<const UExtCharacterAttributeSet> CharacterAttributesSet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ext|Abilities")
 	TArray<TObjectPtr<UExtAbilitySet>> AbilitySets;

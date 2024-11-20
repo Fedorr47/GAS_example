@@ -2,7 +2,7 @@
 
 
 #include "TP_WeaponComponent.h"
-#include "GAS_PlayerCharacter.h"
+#include "Character/Player/GAS_PlayerCharacter.h"
 #include "GAS_exampleProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
