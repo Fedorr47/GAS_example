@@ -3,10 +3,14 @@
 
 #include "Character/ExtBaseCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
 #include "Abilities/ExtAbilitySystemComponent.h"
 #include "Abilities/AttributeSets/ExtCharacterAttributeSet.h"
 #include "Abilities/AttributeSets/ExtAbilitySet.h"
+#include "Input/ExtEnhancedInputComponent.h"
 
+class UEnhancedInputLocalPlayerSubsystem;
 // Sets default values
 AExtBaseCharacter::AExtBaseCharacter()
 {
@@ -83,5 +87,24 @@ void AExtBaseCharacter::PostInitializeComponents()
     
     InitializeAbilitySystem();
 }
+
+void AExtBaseCharacter::AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet)
+{
+    if (!IsValid(AbilitySet->Ability))
+    {
+        //UE_LOG(LogExtAbilitySystem, Error, TEXT("GrantedGameplayAbilities[%d] on ability set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
+        return;
+    }
+
+    UExtGameplayAbility* AbilityCDO = AbilitySet->Ability->GetDefaultObject<UExtGameplayAbility>();
+
+    FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilitySet->AbilityLevel);
+    AbilitySpec.SourceObject = nullptr;
+    AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet->InputTag);
+
+    ExtAbilitySystemComponent->GiveAbility(AbilitySpec);
+}
+
+
 
 

@@ -6,7 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
-class AExtPlayerCharacter;
+class AExtBaseCharacter;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAS_EXAMPLE_API UTP_WeaponComponent : public USkeletalMeshComponent
@@ -34,20 +34,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputMappingContext* FireMappingContext;
 
-	/** Fire Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputAction* FireAction;
-
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
+	void Fire();
 
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
-	bool AttachWeapon(AExtPlayerCharacter* TargetCharacter);
-
-	/** Make the weapon Fire a Projectile */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
+	bool AttachWeapon(AExtBaseCharacter* TargetCharacter);
 
 protected:
 	/** Ends gameplay for this component. */
@@ -56,5 +49,5 @@ protected:
 
 private:
 	/** The Character holding this weapon*/
-	AExtPlayerCharacter* Character;
+	AExtBaseCharacter* Character;
 };

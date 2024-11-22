@@ -53,6 +53,11 @@ float AExtPlayerCharacter::GetMovementSpeed() const
     return IsValid(CharacterAttributesSet) ? CharacterAttributesSet->GetMovementSpeed() : 0.0f;
 }
 
+USkeletalMeshComponent* AExtPlayerCharacter::GetPresentMesh()
+{
+    return GetMesh1P();
+}
+
 void AExtPlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -157,4 +162,34 @@ void AExtPlayerCharacter::Input_AbilityInputTagReleased(FGameplayTag InputTag)
     {
         ExtASC->AbilityInputTagReleased(InputTag);
     }
+}
+
+void AExtPlayerCharacter::BindActionAbility(
+    FGameplayTag InputTag,
+    UInputAction* Action,
+    UInputMappingContext* Context)
+{
+    UEnhancedInputLocalPlayerSubsystem* Subsystem = nullptr;
+    if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+    {
+        Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+        if (IsValid(Subsystem) && Context != nullptr)
+        {
+            Subsystem->AddMappingContext(Context, 0);
+        }
+    }
+
+    TArray<uint32> BindHandles;
+    if (UExtEnhancedInputComponent* ExtIMC = Cast<UExtEnhancedInputComponent>(InputComponent))
+    {
+        ExtIMC->BindAbilityAction(
+            Action,
+            InputTag,
+            this,
+            &ThisClass::Input_AbilityInputTagPressed,
+            &ThisClass::Input_AbilityInputTagReleased,
+            BindHandles);
+    }
+
+    
 }

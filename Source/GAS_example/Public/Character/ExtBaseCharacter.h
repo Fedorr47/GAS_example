@@ -12,6 +12,7 @@ class UExtGameplayAbility;
 class UExtCharacterAttributeSet;
 class UExtAbilitySystemComponent;
 class UExtAbilitySet;
+struct FExtAbilitySet_GameplayAbility;
 
 UCLASS()
 class GAS_EXAMPLE_API AExtBaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -23,6 +24,9 @@ public:
 	AExtBaseCharacter();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	void AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet);
+
+	virtual USkeletalMeshComponent* GetPresentMesh() {return nullptr; }
 
 protected:
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly, Category="Ext|Abilities")

@@ -55,10 +55,10 @@ void UTP_WeaponComponent::Fire()
 	}
 	
 	// Try and play a firing animation if specified
-	if (FireAnimation != nullptr)
+	if (FireAnimation != nullptr && Character->GetPresentMesh() != nullptr)
 	{
 		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
+		UAnimInstance* AnimInstance = Character->GetPresentMesh()->GetAnimInstance();
 		if (AnimInstance != nullptr)
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
@@ -66,37 +66,30 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-bool UTP_WeaponComponent::AttachWeapon(AExtPlayerCharacter* TargetCharacter)
+bool UTP_WeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
 
 	// Check that the character is valid, and has no weapon component yet
-	if (Character == nullptr || Character->GetInstanceComponents().FindItemByClass<UTP_WeaponComponent>())
+	if (IsValid(Character))
 	{
 		return false;
 	}
 
 	// Attach the weapon to the First Person Character
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("GripPoint")));
+	if (Character->GetPresentMesh() != nullptr)
+	{
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+		AttachToComponent(Character->GetPresentMesh(), AttachmentRules, FName(TEXT("GripPoint")));
+	}
 
 	// add the weapon as an instance component to the character
 	Character->AddInstanceComponent(this);
 
-	// Set up action bindings
-	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
+	if (auto ExtPlayer = Cast<AExtPlayerCharacter>(Character))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			// Set the priority of the mapping to 1, so that it overrides the Jump action with the Fire action when using touch input
-			Subsystem->AddMappingContext(FireMappingContext, 1);
-		}
-
-		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
-		{
-			// Fire
-			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
-		}
+		//ExtPlayer->BindActionAbility()
+		//ExtPlayer->AddAbility();
 	}
 
 	return true;

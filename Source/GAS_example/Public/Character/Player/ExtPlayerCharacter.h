@@ -45,6 +45,13 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ext|Character")
     float GetMovementSpeed() const;
 
+	virtual USkeletalMeshComponent* GetPresentMesh();
+
+	void BindActionAbility(
+		FGameplayTag InputTag,
+		UInputAction* Action,
+		UInputMappingContext* Context = nullptr);
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
