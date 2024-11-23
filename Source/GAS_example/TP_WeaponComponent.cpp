@@ -7,7 +7,6 @@
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
@@ -38,22 +37,22 @@ void UTP_WeaponComponent::Fire()
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-	
+
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	
+
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AGAS_exampleProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
-	
+
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
-	
+
 	// Try and play a firing animation if specified
 	if (FireAnimation != nullptr && Character->GetPresentMesh() != nullptr)
 	{
@@ -71,7 +70,7 @@ bool UTP_WeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
 	Character = TargetCharacter;
 
 	// Check that the character is valid, and has no weapon component yet
-	if (IsValid(Character))
+	if (!IsValid(Character))
 	{
 		return false;
 	}
@@ -88,8 +87,12 @@ bool UTP_WeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
 
 	if (auto ExtPlayer = Cast<AExtPlayerCharacter>(Character))
 	{
-		//ExtPlayer->BindActionAbility()
-		//ExtPlayer->AddAbility();
+		ExtPlayer->BindActionAbility(InputActions, FireMappingContext);
+		for (int32 AbilityIndex = 0; AbilityIndex < ProvidedGameplayAbilities.Num(); ++AbilityIndex)
+		{
+			const FExtAbilitySet_GameplayAbility& AbilityToGrant = ProvidedGameplayAbilities[AbilityIndex];
+			ExtPlayer->AddAbility(&AbilityToGrant);
+		}
 	}
 
 	return true;

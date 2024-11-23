@@ -48,8 +48,7 @@ public:
 	virtual USkeletalMeshComponent* GetPresentMesh();
 
 	void BindActionAbility(
-		FGameplayTag InputTag,
-		UInputAction* Action,
+		UInputDataConfig* InputDataConfig,
 		UInputMappingContext* Context = nullptr);
 
 protected:

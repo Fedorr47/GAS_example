@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Abilities/AttributeSets/ExtAbilitySet.h"
 #include "TP_WeaponComponent.generated.h"
 
 class AExtBaseCharacter;
+class UInputDataConfig;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAS_EXAMPLE_API UTP_WeaponComponent : public USkeletalMeshComponent
@@ -33,6 +35,12 @@ public:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputMappingContext* FireMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputDataConfig* InputActions;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Abilities", meta=(TitleProperty=Ability))
+	TArray<FExtAbilitySet_GameplayAbility> ProvidedGameplayAbilities;
 
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();

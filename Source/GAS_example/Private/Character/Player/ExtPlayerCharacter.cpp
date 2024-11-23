@@ -165,10 +165,11 @@ void AExtPlayerCharacter::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 }
 
 void AExtPlayerCharacter::BindActionAbility(
-    FGameplayTag InputTag,
-    UInputAction* Action,
+    UInputDataConfig* InputDataConfig,
     UInputMappingContext* Context)
 {
+    if (!InputDataConfig) return;
+    
     UEnhancedInputLocalPlayerSubsystem* Subsystem = nullptr;
     if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
     {
@@ -179,17 +180,21 @@ void AExtPlayerCharacter::BindActionAbility(
         }
     }
 
-    TArray<uint32> BindHandles;
     if (UExtEnhancedInputComponent* ExtIMC = Cast<UExtEnhancedInputComponent>(InputComponent))
     {
-        ExtIMC->BindAbilityAction(
-            Action,
-            InputTag,
-            this,
-            &ThisClass::Input_AbilityInputTagPressed,
-            &ThisClass::Input_AbilityInputTagReleased,
-            BindHandles);
-    }
+        
+        if (ensureMsgf(ExtIMC, TEXT("Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to UExtEnhancedInputComponent or a subclass of it.")))
+        {
+            // Add the key mappings that may have been set by the player
+            ExtIMC->AddInputMappings(InputDataConfig, Subsystem);
+            
+            TArray<uint32> BindHandles;
+            ExtIMC->BindAbilityActions(InputDataConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+            TArray<uint32> AdvancedBindHandles;
+            ExtIMC->BindAdvancedAbilityActions(InputDataConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ AdvancedBindHandles);
 
-    
+            ExtIMC->BindNativeAction(InputDataConfig, ExtGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
+            ExtIMC->BindNativeAction(InputDataConfig, ExtGameplayTags::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Look, /*bLogIfNotFound=*/ false);
+        }
+    }
 }

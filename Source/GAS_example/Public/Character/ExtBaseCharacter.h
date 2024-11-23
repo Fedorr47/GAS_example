@@ -26,6 +26,7 @@ public:
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	void AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual USkeletalMeshComponent* GetPresentMesh() {return nullptr; }
 
 protected:
