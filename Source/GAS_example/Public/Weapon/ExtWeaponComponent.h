@@ -16,10 +16,6 @@ class GAS_EXAMPLE_API UExtWeaponComponent : public USkeletalMeshComponent
 	GENERATED_BODY()
 
 public:
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class AGAS_exampleProjectile> ProjectileClass;
-
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
@@ -46,6 +42,8 @@ public:
 	UExtWeaponComponent();
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+	UFUNCTION(BlueprintCallable)
+	void GetMuzzlePosition(FVector& Location, FRotator& Rotation);
 
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
