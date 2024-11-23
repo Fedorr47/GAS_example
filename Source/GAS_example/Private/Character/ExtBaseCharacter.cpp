@@ -88,7 +88,7 @@ void AExtBaseCharacter::PostInitializeComponents()
     InitializeAbilitySystem();
 }
 
-void AExtBaseCharacter::AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet)
+void AExtBaseCharacter::AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet, UObject* SourceObject)
 {
     if (!IsValid(AbilitySet->Ability))
     {
@@ -99,10 +99,15 @@ void AExtBaseCharacter::AddAbility(const FExtAbilitySet_GameplayAbility* Ability
     UExtGameplayAbility* AbilityCDO = AbilitySet->Ability->GetDefaultObject<UExtGameplayAbility>();
 
     FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilitySet->AbilityLevel);
-    AbilitySpec.SourceObject = nullptr;
+    AbilitySpec.SourceObject = SourceObject;
     AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet->InputTag);
 
     ExtAbilitySystemComponent->GiveAbility(AbilitySpec);
+}
+
+void AExtBaseCharacter::AddWeapon(UExtWeaponComponent* weapon)
+{
+    OwnedWeapons.Emplace(weapon);
 }
 
 

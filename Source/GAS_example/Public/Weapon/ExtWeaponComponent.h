@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Abilities/AttributeSets/ExtAbilitySet.h"
-#include "TP_WeaponComponent.generated.h"
+#include "ExtWeaponComponent.generated.h"
 
 class AExtBaseCharacter;
 class UInputDataConfig;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class GAS_EXAMPLE_API UTP_WeaponComponent : public USkeletalMeshComponent
+class GAS_EXAMPLE_API UExtWeaponComponent : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
 
@@ -43,7 +43,8 @@ public:
 	TArray<FExtAbilitySet_GameplayAbility> ProvidedGameplayAbilities;
 
 	/** Sets default values for this component's properties */
-	UTP_WeaponComponent();
+	UExtWeaponComponent();
+	UFUNCTION(BlueprintCallable)
 	void Fire();
 
 	/** Attaches the actor to a FirstPersonCharacter */

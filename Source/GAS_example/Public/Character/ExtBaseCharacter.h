@@ -8,6 +8,7 @@
 #include "GameplayEffectTypes.h"
 #include "ExtBaseCharacter.generated.h"
 
+class UExtWeaponComponent;
 class UExtGameplayAbility;
 class UExtCharacterAttributeSet;
 class UExtAbilitySystemComponent;
@@ -24,10 +25,13 @@ public:
 	AExtBaseCharacter();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	void AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet);
+	void AddAbility(const FExtAbilitySet_GameplayAbility* AbilitySet, UObject* SourceObject);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual USkeletalMeshComponent* GetPresentMesh() {return nullptr; }
+
+	UFUNCTION(BlueprintCallable)
+	void AddWeapon(UExtWeaponComponent* weapon);
 
 protected:
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly, Category="Ext|Abilities")
@@ -41,6 +45,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 	TArray<TSubclassOf<class UGameplayEffect>> DefaultEffects;
+
+	UPROPERTY(Transient)
+	TArray<UExtWeaponComponent*> OwnedWeapons;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

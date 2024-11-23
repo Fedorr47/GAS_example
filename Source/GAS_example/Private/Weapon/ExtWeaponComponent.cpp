@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "TP_WeaponComponent.h"
+#include "Weapon/ExtWeaponComponent.h"
 #include "Character/Player/ExtPlayerCharacter.h"
 #include "GAS_exampleProjectile.h"
 #include "GameFramework/PlayerController.h"
@@ -13,14 +13,14 @@
 #include "Engine/World.h"
 
 // Sets default values for this component's properties
-UTP_WeaponComponent::UTP_WeaponComponent()
+UExtWeaponComponent::UExtWeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
 
-void UTP_WeaponComponent::Fire()
+void UExtWeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
@@ -65,7 +65,7 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-bool UTP_WeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
+bool UExtWeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
 
@@ -88,17 +88,20 @@ bool UTP_WeaponComponent::AttachWeapon(AExtBaseCharacter* TargetCharacter)
 	if (auto ExtPlayer = Cast<AExtPlayerCharacter>(Character))
 	{
 		ExtPlayer->BindActionAbility(InputActions, FireMappingContext);
-		for (int32 AbilityIndex = 0; AbilityIndex < ProvidedGameplayAbilities.Num(); ++AbilityIndex)
-		{
-			const FExtAbilitySet_GameplayAbility& AbilityToGrant = ProvidedGameplayAbilities[AbilityIndex];
-			ExtPlayer->AddAbility(&AbilityToGrant);
-		}
 	}
+	
+	for (int32 AbilityIndex = 0; AbilityIndex < ProvidedGameplayAbilities.Num(); ++AbilityIndex)
+	{
+		const FExtAbilitySet_GameplayAbility& AbilityToGrant = ProvidedGameplayAbilities[AbilityIndex];
+		Character->AddAbility(&AbilityToGrant, this);
+	}
+	
+	Character->AddWeapon(this);
 
 	return true;
 }
 
-void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UExtWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	if (Character == nullptr)
 	{

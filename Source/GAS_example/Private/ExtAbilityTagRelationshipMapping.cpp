@@ -2,7 +2,6 @@
 
 #include "ExtAbilityTagRelationshipMapping.h"
 
-
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ExtAbilityTagRelationshipMapping)
 
 void UExtAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagsToCancel) const
